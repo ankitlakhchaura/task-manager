@@ -1,0 +1,242 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "../index.css";
+import { useNavigate } from "react-router-dom";
+
+function Dashboard() {
+
+    const [tasks, setTasks] = useState([]);
+    const [title, setTitle] = useState("");
+    const [priority, setPriority] = useState("Medium");
+    const [search, setSearch] = useState("");
+    const [editId, setEditId] = useState(null);
+    const [dueDate, setDueDate]= useState("");
+    const [filter, setFilter] = useState("All");
+    const [darkMode,setDarkMode] = useState(false);
+    const navigate = useNavigate();
+useEffect(() => {
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    navigate("/");
+    return;
+  }
+
+  fetchTasks();
+
+}, []);
+const fetchTasks = async () => {
+  try {
+    const res = await axios.get("http://localhost:5000/api/tasks");
+    console.log(res.data);
+    setTasks(res.data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+const addTask = async () => {
+  try {
+    if (editId) {
+  await axios.put(`http://localhost:5000/api/tasks/${editId}`, {
+    title,
+    status: "Pending",
+    priority,
+  });
+
+  setEditId(null);
+  fetchTasks();
+  setTitle("");
+  return;
+}
+    await axios.post("http://localhost:5000/api/tasks/create", {
+      title,
+      description: "New Task",
+      status: "Pending",
+      priority: priority,
+      due_date: "2026-06-20",
+      user_id: 1
+    });
+
+    fetchTasks();
+    setTitle("");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const updateTask = async (id) => {
+  try {
+    await axios.put(`http://localhost:5000/api/tasks/${id}`, {
+      status: "Completed"
+    });
+
+    fetchTasks();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const deleteTask = async (id) => {
+  try {
+    await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+    fetchTasks();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const totalTasks = tasks.length;
+
+const completedTasks = tasks.filter(
+  (task) => task.status === "Completed"
+).length;
+
+const pendingTasks = tasks.filter(
+  (task) => task.status === "Pending"
+).length;
+
+const filteredTasks = tasks.filter((task) => {
+  const matchesSearch = task.title
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  const matchesFilter =
+    filter === "All" || task.status === filter;
+
+  return matchesSearch && matchesFilter;
+});
+
+const editTask = (task) => {
+  setTitle(task.title);
+  setPriority(task.priority);
+  setEditId(task.id);
+};
+
+  return (
+    <div className={`container ${darkMode ? "dark" : ""}`}>
+      <h1>Dashboard Page</h1>
+      <div className="stats">
+  <div className="stat-card">
+    <h3>Total</h3>
+    <p>{totalTasks}</p>
+  </div>
+
+  <div className="stat-card">
+    <h3>Pending</h3>
+    <p>{pendingTasks}</p>
+  </div>
+
+  <div className="stat-card">
+    <h3>Completed</h3>
+    <p>{completedTasks}</p>
+  </div>
+</div >
+<div className="top-bar">
+    <button
+  onClick={() => setDarkMode(!darkMode)}
+>
+  {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+</button>
+
+      <button
+  onClick={() => {
+    localStorage.removeItem("token");
+    navigate("/");
+  }}
+>
+  Logout
+</button>
+</div>
+
+
+<div className="task-form">
+<input
+  type="date"
+  value={dueDate}
+  onChange={(e) => setDueDate(e.target.value)}
+/>
+
+<input
+  type="text"
+  placeholder="Search Task"
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+/>
+
+      <input
+  type="text"
+  placeholder="Enter Task"
+  value={title}
+  onChange={(e) => setTitle(e.target.value)}
+/>
+
+<select
+  value={priority}
+  onChange={(e) => setPriority(e.target.value)}
+>
+  <option value="Low">Low</option>
+  <option value="Medium">Medium</option>
+  <option value="High">High</option>
+</select>
+
+<select
+  value={filter}
+  onChange={(e) => setFilter(e.target.value)}
+>
+  <option value="All">All</option>
+  <option value="Pending">Pending</option>
+  <option value="Completed">Completed</option>
+</select>
+
+<button onClick={addTask}>
+  {editId ? "Update Task" : "Add Task"}
+</button>
+</div>
+
+      <ul>
+  {filteredTasks.map((task) => (
+   <div className="task-card" key={task.id}>
+
+    <div>
+  <h3>{task.title}</h3>
+  <p>{task.status}</p>
+  <p>
+  Priority:
+  <span className={task.priority.toLowerCase()}>
+    {" "}{task.priority}
+  </span>
+</p>
+</div>
+   <p>
+  Due: {new Date(task.due_date).toLocaleDateString()}
+</p>
+
+  <div className="task-actions">
+    <button className="complete-btn" onClick={() => updateTask(task.id)}>
+      Complete
+    </button>
+
+    <button className="edit-btn"
+  onClick={() => {
+    setTitle(task.title);
+    setPriority(task.priority);
+    setEditId(task.id);
+  }}
+>
+  Edit
+</button>
+
+    <button className="delete-btn" onClick={() => deleteTask(task.id)}>
+      Delete
+    </button>
+  </div>
+</div>
+  ))}
+</ul>
+
+    </div>
+  );
+}
+
+export default Dashboard;
