@@ -28,7 +28,7 @@ useEffect(() => {
 }, []);
 const fetchTasks = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/api/tasks");
+    const res = await axios.get("https://task-manager-kbwk.onrender.com/");
     console.log(res.data);
     setTasks(res.data);
   } catch (error) {
@@ -38,7 +38,7 @@ const fetchTasks = async () => {
 const addTask = async () => {
   try {
     if (editId) {
-  await axios.put(`http://localhost:5000/api/tasks/${editId}`, {
+  await axios.put(`https://task-manager-kbwk.onrender.com/api/tasks/${editId}`, {
     title,
     status: "Pending",
     priority,
@@ -49,7 +49,7 @@ const addTask = async () => {
   setTitle("");
   return;
 }
-    await axios.post("http://localhost:5000/api/tasks/create", {
+    await axios.post("https://task-manager-kbwk.onrender.com/api/tasks/create", {
       title,
       description: "New Task",
       status: "Pending",
@@ -67,7 +67,7 @@ const addTask = async () => {
 
 const updateTask = async (id) => {
   try {
-    await axios.put(`http://localhost:5000/api/tasks/${id}`, {
+    await axios.put(`https://task-manager-kbwk.onrender.com/api/tasks/${id}`, {
       status: "Completed"
     });
 
@@ -79,7 +79,7 @@ const updateTask = async (id) => {
 
 const deleteTask = async (id) => {
   try {
-    await axios.delete(`http://localhost:5000/api/tasks/${id}`);
+    await axios.delete(`https://task-manager-kbwk.onrender.com/api/tasks/${id}`);
     fetchTasks();
   } catch (error) {
     console.log(error);
