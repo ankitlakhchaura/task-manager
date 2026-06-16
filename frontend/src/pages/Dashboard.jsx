@@ -27,8 +27,16 @@ useEffect(() => {
 
 }, []);
 const fetchTasks = async () => {
+
+    const token = localStorage.getItem("token");
   try {
-    const res = await axios.get("https://task-manager-kbwk.onrender.com/api/tasks");
+    const res = await axios.get("https://task-manager-kbwk.onrender.com/api/tasks",
+        {
+            headers: {
+                authorization: token
+            }
+        }
+    );
     console.log(res.data);
     setTasks(Array.isArray(res.data) ? res.data : []);
   } catch (error) {
@@ -38,25 +46,38 @@ const fetchTasks = async () => {
 const addTask = async () => {
   try {
     if (editId) {
+        const token = localStorage.getItem("token");
   await axios.put(`https://task-manager-kbwk.onrender.com/api/tasks/${editId}`, {
     title,
     status: "Pending",
     priority,
-  });
+  },
+
+{
+    headers: {
+        authorization: token
+    }
+});
 
   setEditId(null);
   fetchTasks();
   setTitle("");
   return;
 }
+
+    const token = localStorage.getItem("token");
     await axios.post("https://task-manager-kbwk.onrender.com/api/tasks/create", {
       title,
       description: "New Task",
       status: "Pending",
       priority: priority,
       due_date: "2026-06-20",
-      user_id: 1
-    });
+    },
+{
+    headers: {
+        authorization: token
+    }
+});
 
     fetchTasks();
     setTitle("");
@@ -67,9 +88,15 @@ const addTask = async () => {
 
 const updateTask = async (id) => {
   try {
+    const token = localStorage.getItem("token");
     await axios.put(`https://task-manager-kbwk.onrender.com/api/tasks/${id}`, {
       status: "Completed"
-    });
+    },
+{
+    headers: {
+        authorization: token
+    }
+});
 
     fetchTasks();
   } catch (error) {
@@ -79,7 +106,14 @@ const updateTask = async (id) => {
 
 const deleteTask = async (id) => {
   try {
-    await axios.delete(`https://task-manager-kbwk.onrender.com/api/tasks/${id}`);
+    const token = localStorage.getItem("token");
+    await axios.delete(`https://task-manager-kbwk.onrender.com/api/tasks/${id}`,
+        {
+            headers: {
+                authorization: token
+            }
+        }
+    );
     fetchTasks();
   } catch (error) {
     console.log(error);
