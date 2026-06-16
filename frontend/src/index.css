@@ -193,3 +193,17 @@ select {
     text-align: center;
   }
 }
+
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  width: 350px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+}

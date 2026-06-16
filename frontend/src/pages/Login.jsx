@@ -38,7 +38,8 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="auth-container">
+        <div className="auth-card">
       <h1>Login Page</h1>
 
       <form onSubmit={handleSubmit}>
@@ -66,6 +67,7 @@ function Login() {
         </button>
 
       </form>
+      </div>
     </div>
   );
 }
