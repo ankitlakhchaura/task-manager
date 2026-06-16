@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Login() {
@@ -40,7 +40,7 @@ function Login() {
   return (
     <div className="auth-container">
         <div className="auth-card">
-      <h1>Login Page</h1>
+      <h2>Login Page</h2>
 
       <form onSubmit={handleSubmit}>
 
@@ -65,6 +65,7 @@ function Login() {
         <button type="submit">
           Login
         </button>
+        <p>Don't have an account? <Link to="/register">Register</Link></p>
 
       </form>
       </div>

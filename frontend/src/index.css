@@ -207,3 +207,20 @@ select {
   background: white;
   border-radius: 10px;
 }
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-card input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.auth-card button {
+  width: 100%;
+  padding: 10px;
+}
