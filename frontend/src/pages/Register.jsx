@@ -33,7 +33,7 @@ function Register() {
   return (
     <div className="auth-container">
         <div className="auth-card">
-      <h1>Register Page</h1>
+      <h2>Register Page</h2>
 
       <form onSubmit={handleSubmit}>
         <input
