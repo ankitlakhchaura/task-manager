@@ -3,7 +3,7 @@ const db = require("../config/db");
 const createTask = (req, res) => {
 
     const { title, description, status, priority, due_date, } = req.body;
-    const user_id = req.user_id;
+    const user_id = req.user.id;
 
     const sql =
     `INSERT INTO tasks
