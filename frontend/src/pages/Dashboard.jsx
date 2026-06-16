@@ -28,9 +28,9 @@ useEffect(() => {
 }, []);
 const fetchTasks = async () => {
   try {
-    const res = await axios.get("https://task-manager-kbwk.onrender.com/");
+    const res = await axios.get("https://task-manager-kbwk.onrender.com/api/tasks");
     console.log(res.data);
-    setTasks(res.data);
+    setTasks(Array.isArray(res.data) ? res.data : []);
   } catch (error) {
     console.log(error);
   }
